@@ -54,3 +54,7 @@ def login_view(request):
 
         messages.add_message(request, messages.ERROR, 'Usuário ou senha inválidos')
         return redirect('/usuarios/login')
+
+def sair(request):
+    auth.logout(request)
+    return redirect('/usuarios/login')
