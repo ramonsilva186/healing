@@ -19,18 +19,17 @@
         <div class="col-md-8">
             
             <p style="font-size: 25px" class="p-bold">Olá, <span class="color-dark">{{request.user.username}}.</span></p>
-            <form action="" post="GET">
+            <form action="{% url 'home' %}" post="GET"> 
                 <input type="text" class="form-control shadow-main-color" placeholder="Busque por profissionais ..." name="medico">
                 <br>
 
                 <div class="especialidades">
-                    <input type="checkbox" name="especialidades" value="">
-                    <span class="badge bg-secondary">
-
-                        Especialidade X
-                    
-                    </span>
-                    
+                    {% for especialidade in especialidades %}
+                        <input type="checkbox" name="especialidades" value="{{especialidade.id}}">
+                        <span class="badge bg-secondary">
+                            {{especialidade.especialidade}}
+                        </span>
+                    {% endfor %}
 
                 </div>
                 <br>
