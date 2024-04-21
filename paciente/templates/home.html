@@ -55,7 +55,7 @@
                             {% else %}
                                 Sem data disponível
                             {% endif %}
-                        <a href="#" class="btn btn-success btn-dark-color">Agendar</a>
+                        <a href="{% url 'escolher_horario' medico.id %}" class="btn btn-success btn-dark-color">Agendar</a>
                     </div>
                     <br>
                 {% endfor %}
