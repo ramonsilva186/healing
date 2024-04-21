@@ -3,7 +3,8 @@ from .models import Especialidades, DadosMedicos, is_medico, DatasAbertas
 from django.http import HttpResponse
 from django.contrib import messages
 from django.contrib.messages import constants
-from datetime import datetime
+from datetime import datetime, timedelta
+from paciente.models import Consulta
 
 # Create your views here.
 def cadastro_medico(request):
@@ -79,3 +80,16 @@ def abrir_horario(request):
 
         messages.add_message(request, messages.SUCCESS, 'Horário aberto com sucesso!')
         return redirect('/medicos/abrir_horario')
+
+def consultas_medico(request):
+    if not is_medico(request.user):
+        messages.add_message(request, constants.WARNING, 'Somente médicos podem ver suas consultas!')
+        return redirect('/usuarios/sair')
+    
+    hoje = datetime.now().date()
+
+    consultas_hoje = Consulta.objects.filter(data_aberta__user=request.user).filter(data_aberta__data__gte=hoje).filter(data_aberta__data__lt=hoje + timedelta(days=1))
+
+    consultas_restantes = Consulta.objects.exclude(id__in=consultas_hoje.values('id'))
+
+    return render(request, 'consultas_medico.html', {'consultas_hoje': consultas_hoje, 'consultas_restantes': consultas_restantes})

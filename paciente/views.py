@@ -50,3 +50,8 @@ def agendar_horario(request, id_data_aberta):
         data_aberta.agendado = True
         data_aberta.save()
         return HttpResponse('Agendado com sucesso')
+
+def minhas_consultas(request):
+
+    minhas_consultas = Consulta.objects.filter(paciente=request.user).filter(data_aberta__data__gte=datetime.now())
+    return render(request, 'minhas_consultas.html', {'minhas_consultas': minhas_consultas})
