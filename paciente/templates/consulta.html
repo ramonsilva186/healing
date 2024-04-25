@@ -48,7 +48,7 @@
                         <p><i class="color-dark bi bi-check-circle-fill"></i> Consulta agendada</p>
                     </div>
                     <div class="col-md">
-                        <p><i class=" bi bi-check-circle-fill"></i> Consulta realizada</p>
+                        <p><i class="{% if consulta.status == 'F' %} color-dark {% endif %} bi bi-check-circle-fill"></i> Consulta realizada</p>
                     </div>
                     <div class="col-md">
                         <p><i class="bi bi-check-circle-fill"></i> Consulta Avaliada</p>
@@ -63,9 +63,11 @@
                 <h3 class="p-bold">Como acessar ?</h3>
                 <p>No horário da consulta acesse o link disponível abaixo</p>
 
-                
-                <a href="#" class="btn btn-success btn-dark-color btn-lg disabled" >Acessar consulta</a>
-
+                {% if consulta.status == 'I' and consulta.link %}
+                    <a href="{{consulta.link}}" class="btn btn-success btn-dark-color btn-lg" >Acessar consulta</a>
+                {% else %}
+                    <a href="#" class="btn btn-success btn-dark-color btn-lg disabled" >Acessar consulta</a>
+                {% endif %}
                 
                 <hr>
                 <h3 class="p-bold">Meus documentos</h3>
