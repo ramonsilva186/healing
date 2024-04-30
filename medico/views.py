@@ -90,7 +90,7 @@ def consultas_medico(request):
 
     consultas_hoje = Consulta.objects.filter(data_aberta__user=request.user).filter(data_aberta__data__gte=hoje).filter(data_aberta__data__lt=hoje + timedelta(days=1))
 
-    consultas_restantes = Consulta.objects.exclude(id__in=consultas_hoje.values('id'))
+    consultas_restantes = Consulta.objects.exclude(id__in=consultas_hoje.values('id')).filter(data_aberta__user=request.user)
 
     return render(request, 'consultas_medico.html', {'consultas_hoje': consultas_hoje, 'consultas_restantes': consultas_restantes, 'is_medico': is_medico(request.user)})
 
@@ -130,7 +130,7 @@ def finalizar_consulta(request, id_consulta):
 
     if request.user != consulta.data_aberta.user:
         messages.add_message(request, constants.ERROR, 'Você não pode finalizar uma consulta que não é sua!')
-        return redirect('/medicos/consultas_medico')
+        return redirect('/medicos/abrir_horario/')
 
 
     consulta.status = 'F'
