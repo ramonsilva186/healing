@@ -137,3 +137,34 @@ def finalizar_consulta(request, id_consulta):
     consulta.save()
     messages.add_message(request, messages.SUCCESS, 'Consulta finalizada com sucesso!')
     return redirect('/medicos/consulta_area_medico/{id_consulta}')
+
+def add_documento(request, id_consulta):
+    if not is_medico(request.user):
+        messages.add_message(request, constants.WARNING, 'Somente médicos podem acessar essa página.')
+        return redirect('/usuarios/sair')
+    
+    consulta = Consulta.objects.get(id=id_consulta)
+    
+    if consulta.data_aberta.user != request.user:
+        messages.add_message(request, constants.ERROR, 'Essa consulta não é sua!')
+        return redirect(f'/medicos/consulta_area_medico/{id_consulta}')
+    
+    
+    titulo = request.POST.get('titulo')
+    documento = request.FILES.get('documento')
+
+    if not documento:
+        messages.add_message(request, constants.WARNING, 'Adicione o documento.')
+        return redirect(f'/medicos/consulta_area_medico/{id_consulta}')
+
+    documento = Documento(
+        consulta=consulta,
+        titulo=titulo,
+        documento=documento
+
+    )
+
+    documento.save()
+
+    messages.add_message(request, constants.SUCCESS, 'Documento enviado com sucesso!')
+    return redirect(f'/medicos/consulta_area_medico/{id_consulta}')
